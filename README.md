@@ -12,6 +12,7 @@ Invariant is a FastAPI and Jinja2 server-rendered blog project for publishing ar
   - `/posts/{slug}` shows one published post.
 - Jinja2 frontend with reusable header, footer, and post card components.
 - Classic editorial frontend style inspired by the templates in `templatedesign/`.
+- Markdown post content rendered as sanitized article HTML.
 
 ## Project Structure
 
@@ -55,4 +56,3 @@ The frontend is organized like a maintainable server-rendered website:
 - `post_detail.html` renders the individual article page.
 
 The visual direction takes inspiration from the classic grid and post-detail references in [`FigmaTemplate`](https://www.figma.com/community/file/1456300075957972581/free-blog-template-4-theme-blog-with-complete-ui), while the implemented functionality stays limited to the currently supported blog routes and database fields. Unsupported future features are represented only by non-functional layout placeholders.
-

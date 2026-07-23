@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from starlette.templating import Jinja2Templates
 
 from app.database import get_db
+from app.markdown import render_markdown
 from app.models.post import Post
 
 router = APIRouter()
@@ -61,5 +62,6 @@ def post_detail(
         name="post_detail.html",
         context={
             "post": post,
+            "rendered_content": render_markdown(post.markdown_content),
         },
     )

@@ -154,7 +154,9 @@ It renders:
 
 The excerpt lede uses `post.excerpt`, so the page has an editorial introduction without adding fake content.
 
-The current post body displays `post.markdown_content` as plain content. Markdown-to-HTML rendering belongs later when the spec reaches body parsing/caching. The CSS already includes prose styles for headings, paragraphs, lists, and spacing so the frontend is ready for rendered markdown later.
+The post body originally displayed `post.markdown_content` as plain content. The CSS already includes prose styles for headings, paragraphs, lists, and spacing so the page was ready for rendered Markdown.
+
+The post body now converts stored Markdown into sanitized HTML before rendering. This fixes raw Markdown markers appearing in the article, including heading hashes, bold markers, and fenced-code syntax. The renderer supports headings, paragraphs, lists, links, tables, and fenced code while sanitizing the generated HTML before it reaches the template. Caching the rendered result remains a later concern.
 
 ## CSS Organization
 
