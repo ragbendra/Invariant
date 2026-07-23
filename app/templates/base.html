@@ -3,17 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Blog{% endblock %}</title>
+    <title>{% block title %}Invariant. — Minimal Blog{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <header>
-        <h1><a href="/">Blog</a></h1>
-    </header>
+
+    <!-- Header & Hero Wrapper -->
+    <div class="top-hero-wrapper">
+        <header class="site-header">
+            <div class="header-container">
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="/" class="nav-link">Homepages ▾</a></li>
+                        <li><a href="#" class="nav-link">About</a></li>
+                        <li><a href="#" class="nav-link">Categories ▾</a></li>
+                        <li><a href="#" class="nav-link">Pages ▾</a></li>
+                    </ul>
+                </nav>
+
+                <a href="/" class="site-logo">
+                    In<span class="logo-badge">variant.</span>
+                </a>
+
+                <div class="header-actions">
+                    <button class="icon-btn" aria-label="Search">🔍</button>
+                    <button class="icon-btn" aria-label="Write">✏️</button>
+                    <a href="#">Contact</a>
+                    <span>En ▾</span>
+                    <div class="theme-toggle">
+                        <div class="theme-toggle-knob"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        {% block top_hero %}{% endblock %}
+    </div>
+
+    <!-- Main Content Container -->
     <main>
         {% block content %}{% endblock %}
     </main>
-    <footer>
-        <p>&copy; 2026 Blog</p>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <a href="/" class="site-logo">
+                    In<span class="logo-badge">variant.</span>
+                </a>
+                <p>Did you come here for something in particular or just general Riker-bashing?</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Blogs</h4>
+                <ul>
+                    <li><a href="#">Travel</a></li>
+                    <li><a href="#">Technology</a></li>
+                    <li><a href="#">Lifestyle</a></li>
+                    <li><a href="#">Fashion</a></li>
+                    <li><a href="#">Business</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
+                    <li><a href="#">Support</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Subscribe For Newsletter</h4>
+                <form class="newsletter-form" onsubmit="event.preventDefault();">
+                    <input type="email" placeholder="Your Email" class="newsletter-input" required>
+                    <button type="submit" class="btn-primary">Subcribe</button>
+                </form>
+                <h4>Follow On:</h4>
+                <div class="social-links">
+                    <a href="#" class="social-icon">tw</a>
+                    <a href="#" class="social-icon">fb</a>
+                    <a href="#" class="social-icon">pt</a>
+                    <a href="#" class="social-icon">ig</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>Designed By Themefisher & Developed By Gethugothemes</p>
+        </div>
     </footer>
+
 </body>
 </html>

@@ -1,25 +1,133 @@
 {% extends "base.html" %}
 
-{% block title %}Blog — Posts{% endblock %}
+{% block title %}Invariant. — Minimal Blog Theme{% endblock %}
+
+{% block top_hero %}
+<!-- Top Hero: Featured This Month & Popular Posted -->
+<div class="hero-container">
+    <!-- Featured Left Column -->
+    <div>
+        <h3 class="section-title"><span class="title-badge">Featured</span> This Month</h3>
+        <div class="featured-grid">
+            <article class="featured-card">
+                <span class="category-tag">Travel</span>
+                <h3><a href="#">Set Video Playback Speed With Javascript</a></h3>
+                <div class="image-placeholder"></div>
+                <div class="meta-row">
+                    <span class="author-avatar"></span>
+                    <span>Jenny Kiaa</span>
+                    <span>|</span>
+                    <span>📅 02 December 2022</span>
+                    <span>|</span>
+                    <span>🕒 3 Min. To Read</span>
+                </div>
+                <p class="excerpt">Did you come here for something in particular or just general Riker-bashing? And blowing into</p>
+            </article>
+
+            <article class="featured-card">
+                <span class="category-tag">Travel</span>
+                <h3><a href="#">Design Is The Mix Of Emotions</a></h3>
+                <div class="image-placeholder"></div>
+                <div class="meta-row">
+                    <span class="author-avatar"></span>
+                    <span>Jenny Kiaa</span>
+                    <span>|</span>
+                    <span>📅 02 December 2022</span>
+                    <span>|</span>
+                    <span>🕒 3 Min. To Read</span>
+                </div>
+                <p class="excerpt">Did you come here for something in particular or just general Riker-bashing? And blowing into</p>
+            </article>
+        </div>
+    </div>
+
+    <!-- Popular Right Column -->
+    <div class="popular-column">
+        <h3 class="section-title"><span class="title-badge">Popular</span> Posted</h3>
+        
+        <article class="popular-item">
+            <span class="category-tag">Travel</span>
+            <h4><a href="#">Design Is The Mix Of Emotions</a></h4>
+            <div class="meta-row">
+                <span class="author-avatar"></span>
+                <span>Jenny Kiaa</span>
+                <span>|</span>
+                <span>📅 02 December 2022</span>
+                <span>|</span>
+                <span>🕒 3 Min. To Read</span>
+            </div>
+            <p class="excerpt">Did you come here for something in particular or just general Riker-bashing? And blowing into maximum warp</p>
+        </article>
+
+        <article class="popular-item">
+            <span class="category-tag">Travel</span>
+            <h4><a href="#">Design Is The Mix Of Emotions</a></h4>
+            <div class="meta-row">
+                <span class="author-avatar"></span>
+                <span>Jenny Kiaa</span>
+                <span>|</span>
+                <span>📅 02 December 2022</span>
+                <span>|</span>
+                <span>🕒 3 Min. To Read</span>
+            </div>
+            <p class="excerpt">Did you come here for something in particular or just general Riker-bashing? And blowing into</p>
+        </article>
+
+        <div class="carousel-dots">
+            <span class="dot"></span>
+            <span class="dot active"></span>
+            <span class="dot"></span>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
 {% block content %}
-<h2>Posts</h2>
+<!-- Page Container: Recently Posted + Sidebar -->
+<div class="page-container">
+    <!-- Main Left Column -->
+    <div>
+        <h3 class="section-title"><span class="title-badge">Recently</span> Posted</h3>
 
-{% if posts %}
-    {% for post in posts %}
-        {% include "partials/post_card.html" %}
-    {% endfor %}
+        <div class="post-list">
+            {% if posts %}
+                {% for post in posts %}
+                    {% include "partials/post_card.html" %}
 
-    <nav>
-        {% if page > 1 %}
-            <a href="/?page={{ page - 1 }}">← Previous</a>
-        {% endif %}
-        <span>Page {{ page }} of {{ total_pages }}</span>
-        {% if page < total_pages %}
-            <a href="/?page={{ page + 1 }}">Next →</a>
-        {% endif %}
-    </nav>
-{% else %}
-    <p>No posts yet.</p>
-{% endif %}
+                    {% if loop.index == 3 %}
+                        <!-- Callout Banner between posts -->
+                        <div class="callout-banner">
+                            <h3>Share Your Knowledge With Our Readers</h3>
+                            <button class="btn-outline-primary">✏️ Write On Invariant</button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <p>No posts published yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            {% if page > 1 %}
+                <a href="/?page={{ page - 1 }}" class="page-item">← Prev.</a>
+            {% else %}
+                <span class="page-item" style="opacity:0.5;">← Prev.</span>
+            {% endif %}
+
+            <a href="/?page=1" class="page-item {% if page == 1 %}active{% endif %}">1</a>
+            <a href="/?page=2" class="page-item {% if page == 2 %}active{% endif %}">2</a>
+            <a href="/?page=3" class="page-item {% if page == 3 %}active{% endif %}">3</a>
+
+            {% if page < total_pages %}
+                <a href="/?page={{ page + 1 }}" class="page-item next-btn">Next →</a>
+            {% else %}
+                <span class="page-item next-btn" style="opacity:0.5;">Next →</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    {% include "partials/sidebar.html" %}
+</div>
 {% endblock %}

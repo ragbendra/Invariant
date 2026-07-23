@@ -1,6 +1,16 @@
-<article>
-    <h3><a href="/posts/{{ post.slug }}">{{ post.title }}</a></h3>
-    <p>{{ post.excerpt }}</p>
-    <p><small>Published: {{ post.published_at.strftime('%Y-%m-%d') }}</small></p>
+<article class="horizontal-post-card">
+    <div class="card-img"></div>
+    <div class="card-content">
+        <span class="category-tag">Travel</span>
+        <h3><a href="/posts/{{ post.slug }}">{{ post.title }}</a></h3>
+        <div class="meta-row">
+            <span class="author-avatar"></span>
+            <span>Jenny Kiaa</span>
+            <span>|</span>
+            <span>📅 {{ post.published_at.strftime('%d %B %Y') if post.published_at else 'Recent' }}</span>
+            <span>|</span>
+            <span>🕒 3 Min. To Read</span>
+        </div>
+        <p class="excerpt">{{ post.excerpt }}</p>
+    </div>
 </article>
-<hr>
