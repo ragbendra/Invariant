@@ -1,16 +1,11 @@
-<article class="horizontal-post-card">
-    <div class="card-img"></div>
-    <div class="card-content">
-        <span class="category-tag">Travel</span>
-        <h3><a href="/posts/{{ post.slug }}">{{ post.title }}</a></h3>
-        <div class="meta-row">
-            <span class="author-avatar"></span>
-            <span>Jenny Kiaa</span>
-            <span>|</span>
-            <span>📅 {{ post.published_at.strftime('%d %B %Y') if post.published_at else 'Recent' }}</span>
-            <span>|</span>
-            <span>🕒 3 Min. To Read</span>
-        </div>
-        <p class="excerpt">{{ post.excerpt }}</p>
+<article class="post-card">
+    <a class="post-card__media" href="/posts/{{ post.slug }}" aria-label="Read {{ post.title }}"></a>
+    <div class="post-card__body">
+        <p class="post-card__meta">
+            {{ post.published_at.strftime('%b %d, %Y') if post.published_at else 'Recent' }}
+        </p>
+        <h2><a href="/posts/{{ post.slug }}">{{ post.title }}</a></h2>
+        <p>{{ post.excerpt }}</p>
+        <a class="read-more" href="/posts/{{ post.slug }}">Read more</a>
     </div>
 </article>

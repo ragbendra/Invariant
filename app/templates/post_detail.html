@@ -1,70 +1,23 @@
 {% extends "base.html" %}
 
-{% block title %}{{ post.title }} — Invariant.{% endblock %}
+{% block title %}{{ post.title }} - Invariant{% endblock %}
 
 {% block content %}
-<div class="page-container">
-    <!-- Single Post Main Content -->
-    <article class="single-post">
-        <span class="category-tag">Travel</span>
-        <h1 class="single-post-title">{{ post.title }}</h1>
-        <div class="meta-row" style="margin: 12px 0 24px;">
-            <span class="author-avatar"></span>
-            <span>Jenny Kiaa</span>
-            <span>|</span>
-            <span>📅 {{ post.published_at.strftime('%d %B %Y') if post.published_at else 'Recent' }}</span>
-        </div>
+<article class="post-detail">
+    <header class="post-detail__header">
+        <p class="eyebrow">Article</p>
+        <h1>{{ post.title }}</h1>
+        <p class="post-detail__meta">
+            {{ post.published_at.strftime('%b %d, %Y') if post.published_at else 'Recent' }}
+        </p>
+    </header>
 
-        <div class="image-placeholder" style="height: 380px; margin-bottom: 30px;"></div>
+    <div class="post-detail__media" aria-hidden="true"></div>
 
-        <div class="post-body-content">
-            {{ post.markdown_content }}
-        </div>
+    <div class="post-body">
+        {{ post.markdown_content }}
+    </div>
 
-        <!-- Social Share Bar -->
-        <div class="share-bar" style="display: flex; gap: 12px; align-items: center; margin: 40px 0; padding-top: 20px; border-top: 1px solid var(--color-border);">
-            <span style="font-size: 18px;">🔗</span>
-            <a href="#" class="social-icon">fb</a>
-            <a href="#" class="social-icon">tw</a>
-            <a href="#" class="social-icon">ig</a>
-            <a href="#" class="social-icon">pt</a>
-        </div>
-
-        <!-- See Related Posts -->
-        <div style="margin-top: 50px;">
-            <h3 class="section-title"><span class="title-badge">See Related</span> Posts</h3>
-            <div class="featured-grid">
-                <article class="featured-card">
-                    <div class="image-placeholder" style="height: 160px;"></div>
-                    <span class="category-tag">Travel</span>
-                    <h4 style="font-size: 16px; font-weight: 700; color: var(--color-text-dark); margin: 6px 0;"><a href="#">Set Video Playback Speed With Javascript</a></h4>
-                    <div class="meta-row">
-                        <span class="author-avatar" style="width:20px; height:20px;"></span>
-                        <span>Jenny Kiaa</span>
-                        <span>|</span>
-                        <span>📅 02 Dec 2022</span>
-                    </div>
-                </article>
-
-                <article class="featured-card">
-                    <div class="image-placeholder" style="height: 160px;"></div>
-                    <span class="category-tag">Travel</span>
-                    <h4 style="font-size: 16px; font-weight: 700; color: var(--color-text-dark); margin: 6px 0;"><a href="#">Set Video Playback Speed With Javascript</a></h4>
-                    <div class="meta-row">
-                        <span class="author-avatar" style="width:20px; height:20px;"></span>
-                        <span>Jenny Kiaa</span>
-                        <span>|</span>
-                        <span>📅 02 Dec 2022</span>
-                    </div>
-                </article>
-            </div>
-        </div>
-
-        <!-- Back Link -->
-        <p style="margin-top: 30px;"><a href="/">← Back to all posts</a></p>
-    </article>
-
-    <!-- Right Sidebar -->
-    {% include "partials/sidebar.html" %}
-</div>
+    <p class="back-link"><a href="/">Back to all posts</a></p>
+</article>
 {% endblock %}
