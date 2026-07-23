@@ -238,14 +238,17 @@ Completed:
 9. Responsive and keyboard interaction refinement
 10. Markdown rendering and sanitized article content
 11. Redis cache wrapper for rendered post bodies
+12. JWT admin login foundation
 
 The latest refinement pass added visible `:focus-visible` states for keyboard users, subtle post-card and pagination hover states, mobile navigation wrapping, tighter small-screen article typography, and a reduced-motion media query. These changes improve usability while preserving the restrained editorial design from the template references.
 
 The article body is converted from Markdown into sanitized HTML before it is passed to the post-detail template. The rendered result is now cached under `post:{slug}:html` through `app/cache.py`. Cache reads, writes, and invalidation are isolated behind helper functions, and Redis errors are logged and ignored so the public page continues rendering from the database when Redis is unavailable. The cache intentionally stores only the post body; comments will remain outside it when the comments phase is implemented.
 
+The access model keeps the homepage and published post pages public. The first authentication unit adds `/admin/login`, JWT creation and validation helpers, and an admin login form styled with the existing Invariant editorial system. Successful authentication uses an expiring JWT in an `HttpOnly` cookie; admin write routes and CSRF protection are still the next authentication steps.
+
 Current next implementation step:
 
-1. Add admin authentication and protected write routes.
+1. Add protected admin post routes.
 2. Call `invalidate_post(slug)` after a post is edited.
 3. Validate Redis hit, miss, and invalidation behavior with Redis or a fake Redis client.
 4. Keep comments outside the rendered post-body cache when that phase begins.
@@ -260,4 +263,4 @@ The following checks were run after the latest frontend edits:
 .\.venv\Scripts\python.exe -m compileall app
 ```
 
-Both passed. Live route checks also confirmed that a seeded post detail page returns `200`, contains rendered heading HTML rather than raw Markdown markers, and continues working while local Redis is offline. The cache key helper also passed its key-format check. Redis hit, miss, and invalidation behavior still requires a running Redis instance or fake-Redis test.
+Both passed. Live route checks confirmed that `/admin/login` returns `200`, the login form is present, invalid credentials return `401`, and JWT creation/decoding round-trips correctly. The seeded post detail page continues to render with local Redis offline. Redis hit, miss, and invalidation behavior still requires a running Redis instance or fake-Redis test.
