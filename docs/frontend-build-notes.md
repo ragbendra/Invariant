@@ -148,10 +148,13 @@ It renders:
 - post title
 - published date
 - media placeholder
+- excerpt lede
 - markdown content
-- back link
+- article navigation
 
-The current post body displays `post.markdown_content` as plain content. Markdown-to-HTML rendering belongs later when the spec reaches body parsing/caching.
+The excerpt lede uses `post.excerpt`, so the page has an editorial introduction without adding fake content.
+
+The current post body displays `post.markdown_content` as plain content. Markdown-to-HTML rendering belongs later when the spec reaches body parsing/caching. The CSS already includes prose styles for headings, paragraphs, lists, and spacing so the frontend is ready for rendered markdown later.
 
 ## CSS Organization
 
@@ -227,6 +230,7 @@ Completed:
 5. Post card component
 6. Post detail layout
 7. Responsive CSS foundation
+8. Post detail lede and prose styling
 
 Recommended next frontend step:
 

@@ -14,10 +14,16 @@
 
     <div class="post-detail__media" aria-hidden="true"></div>
 
-    <div class="post-body">
-        {{ post.markdown_content }}
-    </div>
+    <section class="post-detail__content" aria-label="Article content">
+        <p class="post-detail__lede">{{ post.excerpt }}</p>
 
-    <p class="back-link"><a href="/">Back to all posts</a></p>
+        <div class="post-body">
+            {{ post.markdown_content }}
+        </div>
+    </section>
+
+    <nav class="article-nav" aria-label="Article navigation">
+        <a href="/">Back to all posts</a>
+    </nav>
 </article>
 {% endblock %}
