@@ -1,6 +1,6 @@
 # Invariant Blog
 
-Invariant is a FastAPI and Jinja2 server-rendered blog project. The build follows `blog_build_plan.md`, using SQLAlchemy models, Alembic migrations, and simple HTML/CSS templates that will be expanded phase by phase.
+Invariant is a FastAPI and Jinja2 server-rendered blog project for publishing articles with a clean editorial reading experience. It uses SQLAlchemy models, Alembic migrations, and reusable HTML/CSS templates.
 
 ## Current Scope
 
@@ -44,6 +44,15 @@ tests/
 
 Then open `http://127.0.0.1:8000`.
 
-## Notes
+## Frontend Approach
 
-The frontend is intentionally being built in stages: global layout first, then the active page body, then future sections when the spec reaches them.
+The frontend is organized like a maintainable server-rendered website:
+
+- `base.html` provides the shared document shell.
+- `header.html` and `footer.html` provide reusable site-wide navigation and closing content.
+- `index.html` renders the published article listing.
+- `post_card.html` renders each repeated article preview.
+- `post_detail.html` renders the individual article page.
+
+The visual direction takes inspiration from the classic grid and post-detail references in [`FigmaTemplate`](https://www.figma.com/community/file/1456300075957972581/free-blog-template-4-theme-blog-with-complete-ui), while the implemented functionality stays limited to the currently supported blog routes and database fields. Unsupported future features are represented only by non-functional layout placeholders.
+
