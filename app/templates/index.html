@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Blog — Posts{% endblock %}
+
+{% block content %}
+<h2>Posts</h2>
+
+{% if posts %}
+    {% for post in posts %}
+        {% include "partials/post_card.html" %}
+    {% endfor %}
+
+    <nav>
+        {% if page > 1 %}
+            <a href="/?page={{ page - 1 }}">← Previous</a>
+        {% endif %}
+        <span>Page {{ page }} of {{ total_pages }}</span>
+        {% if page < total_pages %}
+            <a href="/?page={{ page + 1 }}">Next →</a>
+        {% endif %}
+    </nav>
+{% else %}
+    <p>No posts yet.</p>
+{% endif %}
+{% endblock %}
