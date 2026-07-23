@@ -6,7 +6,6 @@ build-backend = "setuptools.build_meta"
 name = "blog"
 version = "0.1.0"
 description = "FastAPI Jinja2 SSR Blog Application"
-readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "fastapi>=0.100.0",
@@ -19,6 +18,10 @@ dependencies = [
     "itsdangerous>=2.1.0",
     "python-jose[cryptography]>=3.3.0",
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
 
 [project.optional-dependencies]
 dev = [
