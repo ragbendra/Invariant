@@ -231,6 +231,9 @@ Completed:
 6. Post detail layout
 7. Responsive CSS foundation
 8. Post detail lede and prose styling
+9. Responsive and keyboard interaction refinement
+
+The latest refinement pass added visible `:focus-visible` states for keyboard users, subtle post-card and pagination hover states, mobile navigation wrapping, tighter small-screen article typography, and a reduced-motion media query. These changes improve usability while preserving the restrained editorial design from the template references.
 
 Recommended next frontend step:
 
@@ -250,4 +253,4 @@ The following checks were run after the latest frontend edits:
 .\.venv\Scripts\python.exe -m compileall app
 ```
 
-Both passed.
+Both passed. Live route checks also confirmed that `/health`, `/`, the stylesheet, and a seeded post detail page return successfully, while an unknown post returns `404`.
