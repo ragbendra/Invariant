@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, Request, HTTPException
 from sqlalchemy.orm import Session
 from starlette.templating import Jinja2Templates
 
+from app.cache import get_cached_post, set_cached_post
 from app.database import get_db
 from app.markdown import render_markdown
 from app.models.post import Post
@@ -57,11 +58,16 @@ def post_detail(
     if post is None:
         raise HTTPException(status_code=404, detail="Post not found")
 
+    rendered_content = get_cached_post(post.slug)
+    if rendered_content is None:
+        rendered_content = render_markdown(post.markdown_content)
+        set_cached_post(post.slug, rendered_content)
+
     return templates.TemplateResponse(
         request=request,
         name="post_detail.html",
         context={
             "post": post,
-            "rendered_content": render_markdown(post.markdown_content),
+            "rendered_content": rendered_content,
         },
     )

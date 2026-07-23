@@ -158,6 +158,8 @@ The post body originally displayed `post.markdown_content` as plain content. The
 
 The post body now converts stored Markdown into sanitized HTML before rendering. This fixes raw Markdown markers appearing in the article, including heading hashes, bold markers, and fenced-code syntax. The renderer supports headings, paragraphs, lists, links, tables, and fenced code while sanitizing the generated HTML before it reaches the template. Caching the rendered result remains a later concern.
 
+The rendered post body is now cached in Redis under `post:{slug}:html`. A post detail request checks Redis first, renders and stores the sanitized HTML on a miss, and falls back to database rendering when Redis is unavailable. Cache invalidation is exposed through `invalidate_post(slug)` for the future admin write routes; comments will remain outside this cache in their own phase.
+
 ## CSS Organization
 
 All current frontend styles live in:
@@ -234,16 +236,19 @@ Completed:
 7. Responsive CSS foundation
 8. Post detail lede and prose styling
 9. Responsive and keyboard interaction refinement
+10. Markdown rendering and sanitized article content
+11. Redis cache wrapper for rendered post bodies
 
 The latest refinement pass added visible `:focus-visible` states for keyboard users, subtle post-card and pagination hover states, mobile navigation wrapping, tighter small-screen article typography, and a reduced-motion media query. These changes improve usability while preserving the restrained editorial design from the template references.
 
-Recommended next frontend step:
+The article body is converted from Markdown into sanitized HTML before it is passed to the post-detail template. The rendered result is now cached under `post:{slug}:html` through `app/cache.py`. Cache reads, writes, and invalidation are isolated behind helper functions, and Redis errors are logged and ignored so the public page continues rendering from the database when Redis is unavailable. The cache intentionally stores only the post body; comments will remain outside it when the comments phase is implemented.
 
-1. Run the app in browser.
-2. Compare homepage against `Classic Blog Grid.png`.
-3. Adjust spacing, typography, and responsive behavior.
-4. Compare post detail against `Classic Blog Post Detail.png`.
-5. Only then move to new sections or routes.
+Current next implementation step:
+
+1. Add admin authentication and protected write routes.
+2. Call `invalidate_post(slug)` after a post is edited.
+3. Validate Redis hit, miss, and invalidation behavior with Redis or a fake Redis client.
+4. Keep comments outside the rendered post-body cache when that phase begins.
 
 ## Validation Used
 
@@ -255,4 +260,4 @@ The following checks were run after the latest frontend edits:
 .\.venv\Scripts\python.exe -m compileall app
 ```
 
-Both passed. Live route checks also confirmed that `/health`, `/`, the stylesheet, and a seeded post detail page return successfully, while an unknown post returns `404`.
+Both passed. Live route checks also confirmed that a seeded post detail page returns `200`, contains rendered heading HTML rather than raw Markdown markers, and continues working while local Redis is offline. The cache key helper also passed its key-format check. Redis hit, miss, and invalidation behavior still requires a running Redis instance or fake-Redis test.
