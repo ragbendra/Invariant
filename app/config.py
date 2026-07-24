@@ -10,3 +10,4 @@ JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 JWT_EXPIRE_MINUTES = int(os.getenv("JWT_EXPIRE_MINUTES", "30"))
 AUTH_COOKIE_NAME = "invariant_access_token"
 AUTH_COOKIE_SECURE = os.getenv("AUTH_COOKIE_SECURE", "false").lower() == "true"
+CSRF_COOKIE_NAME = "invariant_csrf_token"

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}New Post - Invariant{% endblock %}
+
+{% block content %}
+<section class="admin-page" aria-labelledby="new-post-title">
+    <div class="admin-page__header">
+        <p class="eyebrow">Invariant admin</p>
+        <h1 id="new-post-title">Publish a new post.</h1>
+        {% if created %}
+            <p class="admin-page__notice">Post created successfully.</p>
+        {% endif %}
+    </div>
+
+    <form class="auth-form admin-form" method="post" action="/admin/posts">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        <label for="title">Title</label>
+        <input id="title" name="title" type="text" required>
+
+        <label for="slug">Slug</label>
+        <input id="slug" name="slug" type="text" required>
+
+        <label for="excerpt">Excerpt</label>
+        <textarea id="excerpt" name="excerpt" rows="3" required></textarea>
+
+        <label for="markdown_content">Content (Markdown)</label>
+        <textarea id="markdown_content" name="markdown_content" rows="16" required></textarea>
+
+        <label for="published_at">Publish date (optional)</label>
+        <input id="published_at" name="published_at" type="datetime-local">
+
+        <button type="submit">Create post</button>
+    </form>
+</section>
+{% endblock %}

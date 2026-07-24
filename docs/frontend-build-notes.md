@@ -238,17 +238,24 @@ Completed:
 9. Responsive and keyboard interaction refinement
 10. Markdown rendering and sanitized article content
 11. Redis cache wrapper for rendered post bodies
-12. JWT admin login foundation
+12. JWT user login foundation
+13. Protected create-post form with CSRF validation
 
 The latest refinement pass added visible `:focus-visible` states for keyboard users, subtle post-card and pagination hover states, mobile navigation wrapping, tighter small-screen article typography, and a reduced-motion media query. These changes improve usability while preserving the restrained editorial design from the template references.
 
 The article body is converted from Markdown into sanitized HTML before it is passed to the post-detail template. The rendered result is now cached under `post:{slug}:html` through `app/cache.py`. Cache reads, writes, and invalidation are isolated behind helper functions, and Redis errors are logged and ignored so the public page continues rendering from the database when Redis is unavailable. The cache intentionally stores only the post body; comments will remain outside it when the comments phase is implemented.
 
-The access model keeps the homepage and published post pages public. The first authentication unit adds `/admin/login`, JWT creation and validation helpers, and an admin login form styled with the existing Invariant editorial system. Successful authentication uses an expiring JWT in an `HttpOnly` cookie; admin write routes and CSRF protection are still the next authentication steps.
+The access model keeps the homepage and published post pages public. The first authentication unit adds `/login`, JWT creation and validation helpers, and a user-facing sign-in form styled with the existing Invariant editorial system. Successful authentication uses an expiring JWT in an `HttpOnly` cookie; registration, user-scoped write routes, and CSRF protection are still the next authentication steps.
+
+The header and footer now expose a `Sign in` entry point without changing the public reading experience. The current create-post form is an implementation placeholder from the earlier admin-labeled step and will be moved to the authenticated user workflow as registration and user-scoped routes are completed.
+
+The shared header places `Sign in` as the rightmost navigation item. It uses the copper accent and a subtle divider so account access is discoverable without competing with the public reading links. On narrow screens, the divider is removed and the item wraps with the rest of the navigation. The component is named `site-nav__account` to reflect that it is for normal users, not a special admin-only entry point.
+
+The next admin unit adds a protected create-post form at `/admin/posts/new` and a `POST /admin/posts` route. The route requires a valid JWT, checks a separate double-submit CSRF token, validates slug uniqueness and the optional publish date, and assigns the new post to the authenticated user. Edit and delete routes are intentionally not included yet.
 
 Current next implementation step:
 
-1. Add protected admin post routes.
+1. Add user registration and move the create-post workflow under the authenticated user model.
 2. Call `invalidate_post(slug)` after a post is edited.
 3. Validate Redis hit, miss, and invalidation behavior with Redis or a fake Redis client.
 4. Keep comments outside the rendered post-body cache when that phase begins.
@@ -263,4 +270,4 @@ The following checks were run after the latest frontend edits:
 .\.venv\Scripts\python.exe -m compileall app
 ```
 
-Both passed. Live route checks confirmed that `/admin/login` returns `200`, the login form is present, invalid credentials return `401`, and JWT creation/decoding round-trips correctly. The seeded post detail page continues to render with local Redis offline. Redis hit, miss, and invalidation behavior still requires a running Redis instance or fake-Redis test.
+Both passed. The auth templates load and JWT creation/decoding still round-trips correctly. The next live validation should target `/login` and the user registration flow; the earlier `/admin/login` wording is no longer the intended product model.

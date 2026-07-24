@@ -10,7 +10,7 @@ from app.config import AUTH_COOKIE_NAME, AUTH_COOKIE_SECURE, JWT_EXPIRE_MINUTES
 from app.database import get_db
 from app.models.user import User
 
-router = APIRouter(prefix="/admin", tags=["admin-auth"])
+router = APIRouter(tags=["auth"])
 templates = Jinja2Templates(directory="app/templates")
 
 
@@ -25,7 +25,7 @@ def verify_password(password: str, hashed_password: str) -> bool:
 def login_page(request: Request):
     return templates.TemplateResponse(
         request=request,
-        name="admin_login.html",
+        name="login.html",
     )
 
 

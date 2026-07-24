@@ -14,7 +14,7 @@ Invariant is a FastAPI and Jinja2 server-rendered blog project for publishing ar
 - Classic editorial frontend style inspired by the templates in `templatedesign/`.
 - Markdown post content rendered as sanitized article HTML.
 - Rendered post body caching through Redis when Redis is available.
-- Public reading with JWT-protected admin authentication.
+- Public reading with JWT-protected user authentication.
 
 ## Project Structure
 
@@ -61,4 +61,4 @@ The visual direction takes inspiration from the classic grid and post-detail ref
 
 ## Access Model
 
-Published posts are publicly readable. Authentication is reserved for the admin area, where JWTs are stored in `HttpOnly` cookies and used to protect future post-management actions. Reader accounts and reader-only actions are outside the current scope.
+Published posts are publicly readable. Registered users sign in with JWT authentication stored in `HttpOnly` cookies. Authenticated users will be able to create posts, comment, and access deeper account features; moderation and elevated roles will be defined separately when needed.

@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Admin Login - Invariant{% endblock %}
+{% block title %}Sign In - Invariant{% endblock %}
 
 {% block content %}
 <section class="auth-page" aria-labelledby="login-title">
     <div class="auth-page__copy">
-        <p class="eyebrow">Invariant admin</p>
-        <h1 id="login-title">Sign in to publish.</h1>
-        <p>Access to post management is restricted to authorized administrators.</p>
+        <p class="eyebrow">Invariant account</p>
+        <h1 id="login-title">Sign in to participate.</h1>
+        <p>Sign in to create posts, join conversations, and access account features as they become available.</p>
     </div>
 
-    <form class="auth-form" method="post" action="/admin/login">
+    <form class="auth-form" method="post" action="/login">
         <label for="username">Username</label>
         <input id="username" name="username" type="text" autocomplete="username" required>
 

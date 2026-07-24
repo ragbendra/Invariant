@@ -1,10 +1,18 @@
 from datetime import datetime, timedelta, timezone
+import secrets
 
 from fastapi import Depends, HTTPException, Request, status
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
-from app.config import AUTH_COOKIE_NAME, JWT_ALGORITHM, JWT_EXPIRE_MINUTES, SECRET_KEY
+from app.config import (
+    AUTH_COOKIE_NAME,
+    AUTH_COOKIE_SECURE,
+    CSRF_COOKIE_NAME,
+    JWT_ALGORITHM,
+    JWT_EXPIRE_MINUTES,
+    SECRET_KEY,
+)
 from app.database import get_db
 from app.models.user import User
 
@@ -48,3 +56,21 @@ def get_current_user(
             detail="Authentication required",
         )
     return user
+
+
+def get_or_create_csrf_token(request: Request) -> tuple[str, bool]:
+    token = request.cookies.get(CSRF_COOKIE_NAME)
+    if token:
+        return token, False
+    return secrets.token_urlsafe(32), True
+
+
+def set_csrf_cookie(response, token: str) -> None:
+    response.set_cookie(
+        key=CSRF_COOKIE_NAME,
+        value=token,
+        max_age=JWT_EXPIRE_MINUTES * 60,
+        httponly=False,
+        secure=AUTH_COOKIE_SECURE,
+        samesite="lax",
+    )
