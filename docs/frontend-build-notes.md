@@ -244,6 +244,7 @@ Completed:
 15. Authenticated comments with user ownership
 16. Redis comment rate limiting
 17. Protected post editing with cache invalidation
+18. Protected post deletion
 
 The latest refinement pass added visible `:focus-visible` states for keyboard users, subtle post-card and pagination hover states, mobile navigation wrapping, tighter small-screen article typography, and a reduced-motion media query. These changes improve usability while preserving the restrained editorial design from the template references.
 
@@ -267,10 +268,11 @@ Comment submissions now use a Redis fixed-window counter at `comment_rl:{ip}`. F
 
 Post owners can now edit their own posts at `/account/posts/{slug}/edit`. The browser form uses a POST route, while the specification’s `PUT /posts/{slug}` endpoint is also available. The route validates ownership and CSRF, supports slug changes without collisions, commits the update, and invalidates the old and new rendered-post cache keys after success.
 
+Post owners can delete their own posts from the edit page. The browser form uses `/account/posts/{slug}/delete`, while `DELETE /posts/{slug}` is available for clients following the specification. The route validates ownership and CSRF, commits the deletion, and invalidates the post cache afterward.
+
 Current next implementation step:
 
-1. Add protected post deletion.
-2. Validate Redis hit, miss, and invalidation behavior with Redis or a fake Redis client.
+1. Validate Redis hit, miss, and invalidation behavior with Redis or a fake Redis client.
 4. Keep comments outside the rendered post-body cache when that phase begins.
 
 ## Validation Used
@@ -283,4 +285,4 @@ The following checks were run after the latest frontend edits:
 .\.venv\Scripts\python.exe -m compileall app
 ```
 
-Both passed. The auth, user post, comment, and edit templates load; JWT creation/decoding still round-trips correctly; the comment model exposes `user_id`; migration `b1c8e2a4f6d1` is applied at database head; and the rate-limit threshold passes with a fake Redis client. The next implementation step is protected post deletion.
+Both passed. The auth, user post, comment, edit, and delete templates load; JWT creation/decoding still round-trips correctly; the comment model exposes `user_id`; migration `b1c8e2a4f6d1` is applied at database head; the rate-limit threshold passes with a fake Redis client; and deletion cache invalidation is covered by the cache helper check. The next implementation step is broader Redis cache validation.

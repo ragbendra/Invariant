@@ -32,5 +32,12 @@
 
         <button type="submit">{% if post %}Save changes{% else %}Create post{% endif %}</button>
     </form>
+
+    {% if post %}
+        <form class="account-delete-form" method="post" action="/account/posts/{{ post.slug }}/delete" onsubmit="return confirm('Delete this post permanently?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <button type="submit">Delete post</button>
+        </form>
+    {% endif %}
 </section>
 {% endblock %}

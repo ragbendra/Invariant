@@ -173,3 +173,36 @@ def update_post(
         f"/account/posts/{new_slug}/edit?updated=1",
         status_code=status.HTTP_303_SEE_OTHER,
     )
+
+
+@router.post("/account/posts/{slug}/delete")
+@router.delete("/posts/{slug}")
+def delete_post(
+    request: Request,
+    slug: str,
+    csrf_token: str = Form(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    cookie_token = request.cookies.get(CSRF_COOKIE_NAME)
+    if not cookie_token or not compare_digest(csrf_token, cookie_token):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Invalid CSRF token",
+        )
+
+    post = (
+        db.query(Post)
+        .filter(Post.slug == slug, Post.author_id == current_user.id)
+        .first()
+    )
+    if post is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
+
+    db.delete(post)
+    db.commit()
+    invalidate_post(slug)
+
+    if request.method == "DELETE":
+        return JSONResponse({"message": "Post deleted", "slug": slug})
+    return RedirectResponse("/", status_code=status.HTTP_303_SEE_OTHER)

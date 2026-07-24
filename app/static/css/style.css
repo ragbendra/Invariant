@@ -363,6 +363,26 @@ h2 {
   line-height: 1.5;
 }
 
+.account-delete-form {
+  margin-top: 14px;
+}
+
+.account-delete-form button {
+  min-height: 42px;
+  padding: 9px 14px;
+  border: 1px solid #a64032;
+  background: var(--color-bg);
+  color: #a64032;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.account-delete-form button:hover {
+  background: #a64032;
+  color: var(--color-bg);
+}
+
 .auth-form {
   display: grid;
   gap: 10px;
