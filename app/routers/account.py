@@ -12,11 +12,11 @@ from app.database import get_db
 from app.models.post import Post
 from app.models.user import User
 
-router = APIRouter(prefix="/admin", tags=["admin"])
+router = APIRouter(tags=["account"])
 templates = Jinja2Templates(directory="app/templates")
 
 
-@router.get("/posts/new")
+@router.get("/account/posts/new")
 def new_post_page(
     request: Request,
     current_user: User = Depends(get_current_user),
@@ -24,7 +24,7 @@ def new_post_page(
     csrf_token, should_set_cookie = get_or_create_csrf_token(request)
     response = templates.TemplateResponse(
         request=request,
-        name="admin_post_form.html",
+        name="post_form.html",
         context={"csrf_token": csrf_token, "created": request.query_params.get("created")},
     )
     if should_set_cookie:
@@ -74,4 +74,4 @@ def create_post(
     )
     db.add(post)
     db.commit()
-    return RedirectResponse("/admin/posts/new?created=1", status_code=status.HTTP_303_SEE_OTHER)
+    return RedirectResponse("/account/posts/new?created=1", status_code=status.HTTP_303_SEE_OTHER)

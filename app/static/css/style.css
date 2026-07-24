@@ -332,27 +332,27 @@ h2 {
   font-weight: 700;
 }
 
-.admin-page {
+.account-page {
   max-width: 760px;
   margin: 0 auto;
 }
 
-.admin-page__header {
+.account-page__header {
   margin-bottom: 34px;
 }
 
-.admin-page__header h1 {
+.account-page__header h1 {
   font-size: clamp(42px, 6vw, 66px);
   font-weight: 500;
 }
 
-.admin-page__notice {
+.account-page__notice {
   margin: 18px 0 0;
   color: var(--color-accent);
   font-weight: 700;
 }
 
-.admin-form textarea {
+.account-form textarea {
   width: 100%;
   resize: vertical;
   padding: 10px 12px;

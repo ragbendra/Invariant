@@ -248,17 +248,19 @@ The article body is converted from Markdown into sanitized HTML before it is pas
 
 The access model keeps the homepage and published post pages public. The first authentication unit adds `/login`, JWT creation and validation helpers, and a user-facing sign-in form styled with the existing Invariant editorial system. Successful authentication uses an expiring JWT in an `HttpOnly` cookie; registration, user-scoped write routes, and CSRF protection are still the next authentication steps.
 
-The header and footer now expose a `Sign in` entry point without changing the public reading experience. The current create-post form is an implementation placeholder from the earlier admin-labeled step and will be moved to the authenticated user workflow as registration and user-scoped routes are completed.
+The header and footer now expose a `Sign in` entry point without changing the public reading experience. The create-post form is now part of the authenticated user workflow at `/account/posts/new`, with `POST /posts` assigning the new post to the signed-in user's ID.
 
 The shared header places `Sign in` as the rightmost navigation item. It uses the copper accent and a subtle divider so account access is discoverable without competing with the public reading links. On narrow screens, the divider is removed and the item wraps with the rest of the navigation. The component is named `site-nav__account` to reflect that it is for normal users, not a special admin-only entry point.
 
+Development now uses the fixed `run_dev.ps1` command on port `8010` with Uvicorn reload scoped to `app/`. This avoids changing URLs between iterations and makes Python, template, and CSS changes visible after a browser refresh.
+
 The account flow now includes `/register` with username, email, and bcrypt-hashed password storage. The sign-in page links to registration, and successful registration redirects back to `/login?registered=1` with a confirmation message. Passwords shorter than eight characters and duplicate usernames or email addresses are rejected.
 
-The next admin unit adds a protected create-post form at `/admin/posts/new` and a `POST /admin/posts` route. The route requires a valid JWT, checks a separate double-submit CSRF token, validates slug uniqueness and the optional publish date, and assigns the new post to the authenticated user. Edit and delete routes are intentionally not included yet.
+The protected create-post unit requires a valid JWT, checks a separate double-submit CSRF token, validates slug uniqueness and the optional publish date, and assigns the new post to the authenticated user. Edit and delete routes are intentionally not included yet.
 
 Current next implementation step:
 
-1. Move the create-post workflow under the authenticated user model.
+1. Add authenticated comments associated with the signed-in user's ID.
 2. Call `invalidate_post(slug)` after a post is edited.
 3. Validate Redis hit, miss, and invalidation behavior with Redis or a fake Redis client.
 4. Keep comments outside the rendered post-body cache when that phase begins.
@@ -273,4 +275,4 @@ The following checks were run after the latest frontend edits:
 .\.venv\Scripts\python.exe -m compileall app
 ```
 
-Both passed. The auth templates load, JWT creation/decoding still round-trips correctly, and the registration flow validates password length before database insertion. The next implementation step is moving post creation under authenticated users.
+Both passed. The auth and user post templates load, JWT creation/decoding still round-trips correctly, and the registration flow validates password length before database insertion. The next implementation step is authenticated comments associated with user IDs.

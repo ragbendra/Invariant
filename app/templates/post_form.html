@@ -3,16 +3,16 @@
 {% block title %}New Post - Invariant{% endblock %}
 
 {% block content %}
-<section class="admin-page" aria-labelledby="new-post-title">
-    <div class="admin-page__header">
-        <p class="eyebrow">Invariant admin</p>
-        <h1 id="new-post-title">Publish a new post.</h1>
+<section class="account-page" aria-labelledby="new-post-title">
+    <div class="account-page__header">
+        <p class="eyebrow">Your Invariant account</p>
+        <h1 id="new-post-title">Create a new post.</h1>
         {% if created %}
-            <p class="admin-page__notice">Post created successfully.</p>
+            <p class="account-page__notice">Post created successfully.</p>
         {% endif %}
     </div>
 
-    <form class="auth-form admin-form" method="post" action="/admin/posts">
+    <form class="auth-form account-form" method="post" action="/posts">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
         <label for="title">Title</label>
