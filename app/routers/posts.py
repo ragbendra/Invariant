@@ -18,6 +18,7 @@ from app.markdown import render_markdown
 from app.models.comment import Comment
 from app.models.post import Post
 from app.models.user import User
+from app.rate_limit import allow_comment
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
@@ -113,6 +114,14 @@ def create_comment(
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Invalid CSRF token",
+        )
+
+    ip_address = request.client.host if request.client else "unknown"
+    if not allow_comment(ip_address):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many comments. Please try again later.",
+            headers={"Retry-After": "60"},
         )
 
     post = (

@@ -242,6 +242,7 @@ Completed:
 13. Protected create-post form with CSRF validation
 14. User registration flow
 15. Authenticated comments with user ownership
+16. Redis comment rate limiting
 
 The latest refinement pass added visible `:focus-visible` states for keyboard users, subtle post-card and pagination hover states, mobile navigation wrapping, tighter small-screen article typography, and a reduced-motion media query. These changes improve usability while preserving the restrained editorial design from the template references.
 
@@ -261,9 +262,11 @@ The protected create-post unit requires a valid JWT, checks a separate double-su
 
 Comments now render outside the cached post body. Published post pages load approved comments directly from the database, while signed-in users can submit a comment through `POST /posts/{slug}/comments`. New comments store the authenticated user's ID and username, default to unapproved for moderation, and use CSRF validation. Anonymous readers can still read posts but are prompted to sign in before commenting.
 
+Comment submissions now use a Redis fixed-window counter at `comment_rl:{ip}`. Five submissions from one IP are allowed per 60-second window; the sixth receives `429` with a `Retry-After` header. If Redis is unavailable, the application logs the failure and allows the comment route to continue so a cache/rate-limit outage does not block the site.
+
 Current next implementation step:
 
-1. Add Redis fixed-window rate limiting for comment submissions.
+1. Add protected post editing with cache invalidation.
 2. Call `invalidate_post(slug)` after a post is edited.
 3. Validate Redis hit, miss, and invalidation behavior with Redis or a fake Redis client.
 4. Keep comments outside the rendered post-body cache when that phase begins.
@@ -278,4 +281,4 @@ The following checks were run after the latest frontend edits:
 .\.venv\Scripts\python.exe -m compileall app
 ```
 
-Both passed. The auth, user post, and comment templates load; JWT creation/decoding still round-trips correctly; the comment model exposes `user_id`; and migration `b1c8e2a4f6d1` is applied at database head. The comments query now succeeds against MySQL. The next implementation step is Redis fixed-window rate limiting for comment submissions.
+Both passed. The auth, user post, and comment templates load; JWT creation/decoding still round-trips correctly; the comment model exposes `user_id`; migration `b1c8e2a4f6d1` is applied at database head; and the rate-limit threshold passes with a fake Redis client. The comments query succeeds against MySQL. The next implementation step is protected post editing with cache invalidation.
