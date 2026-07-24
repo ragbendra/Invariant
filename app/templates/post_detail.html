@@ -22,6 +22,37 @@
         </div>
     </section>
 
+    <section class="comments" id="comments" aria-labelledby="comments-title">
+        <div class="comments__header">
+            <p class="eyebrow">Conversation</p>
+            <h2 id="comments-title">Comments</h2>
+        </div>
+
+        {% if comments %}
+            <div class="comments__list">
+                {% for comment in comments %}
+                    <article class="comment">
+                        <p class="comment__meta">{{ comment.author_name }} · {{ comment.created_at.strftime('%b %d, %Y') }}</p>
+                        <p>{{ comment.body }}</p>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="comments__empty">No approved comments yet.</p>
+        {% endif %}
+
+        {% if current_user %}
+            <form class="comment-form" method="post" action="/posts/{{ post.slug }}/comments">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <label for="comment-body">Add a comment</label>
+                <textarea id="comment-body" name="body" rows="4" required></textarea>
+                <button type="submit">Submit comment</button>
+            </form>
+        {% else %}
+            <p class="comments__sign-in"><a href="/login">Sign in</a> to join the conversation.</p>
+        {% endif %}
+    </section>
+
     <nav class="article-nav" aria-label="Article navigation">
         <a href="/">Back to all posts</a>
     </nav>

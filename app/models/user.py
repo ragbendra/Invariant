@@ -5,6 +5,7 @@ from app.database import Base
 
 if TYPE_CHECKING:
     from app.models.post import Post
+    from app.models.comment import Comment
 
 
 class User(Base):
@@ -16,3 +17,4 @@ class User(Base):
     hashed_password: Mapped[str] = mapped_column(String(255))
 
     posts: Mapped[list["Post"]] = relationship(back_populates="author")
+    comments: Mapped[list["Comment"]] = relationship(back_populates="user")

@@ -158,7 +158,7 @@ The post body originally displayed `post.markdown_content` as plain content. The
 
 The post body now converts stored Markdown into sanitized HTML before rendering. This fixes raw Markdown markers appearing in the article, including heading hashes, bold markers, and fenced-code syntax. The renderer supports headings, paragraphs, lists, links, tables, and fenced code while sanitizing the generated HTML before it reaches the template. Caching the rendered result remains a later concern.
 
-The rendered post body is now cached in Redis under `post:{slug}:html`. A post detail request checks Redis first, renders and stores the sanitized HTML on a miss, and falls back to database rendering when Redis is unavailable. Cache invalidation is exposed through `invalidate_post(slug)` for the future admin write routes; comments will remain outside this cache in their own phase.
+The rendered post body is now cached in Redis under `post:{slug}:html`. A post detail request checks Redis first, renders and stores the sanitized HTML on a miss, and falls back to database rendering when Redis is unavailable. Cache invalidation is exposed through `invalidate_post(slug)` for the future post-edit route; comments remain outside this cache.
 
 ## CSS Organization
 
@@ -241,6 +241,7 @@ Completed:
 12. JWT user login foundation
 13. Protected create-post form with CSRF validation
 14. User registration flow
+15. Authenticated comments with user ownership
 
 The latest refinement pass added visible `:focus-visible` states for keyboard users, subtle post-card and pagination hover states, mobile navigation wrapping, tighter small-screen article typography, and a reduced-motion media query. These changes improve usability while preserving the restrained editorial design from the template references.
 
@@ -258,9 +259,11 @@ The account flow now includes `/register` with username, email, and bcrypt-hashe
 
 The protected create-post unit requires a valid JWT, checks a separate double-submit CSRF token, validates slug uniqueness and the optional publish date, and assigns the new post to the authenticated user. Edit and delete routes are intentionally not included yet.
 
+Comments now render outside the cached post body. Published post pages load approved comments directly from the database, while signed-in users can submit a comment through `POST /posts/{slug}/comments`. New comments store the authenticated user's ID and username, default to unapproved for moderation, and use CSRF validation. Anonymous readers can still read posts but are prompted to sign in before commenting.
+
 Current next implementation step:
 
-1. Add authenticated comments associated with the signed-in user's ID.
+1. Add Redis fixed-window rate limiting for comment submissions.
 2. Call `invalidate_post(slug)` after a post is edited.
 3. Validate Redis hit, miss, and invalidation behavior with Redis or a fake Redis client.
 4. Keep comments outside the rendered post-body cache when that phase begins.
@@ -275,4 +278,4 @@ The following checks were run after the latest frontend edits:
 .\.venv\Scripts\python.exe -m compileall app
 ```
 
-Both passed. The auth and user post templates load, JWT creation/decoding still round-trips correctly, and the registration flow validates password length before database insertion. The next implementation step is authenticated comments associated with user IDs.
+Both passed. The auth, user post, and comment templates load; JWT creation/decoding still round-trips correctly; the comment model exposes `user_id`; and migration `b1c8e2a4f6d1` is applied at database head. The comments query now succeeds against MySQL. The next implementation step is Redis fixed-window rate limiting for comment submissions.

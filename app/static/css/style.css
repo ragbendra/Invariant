@@ -498,6 +498,92 @@ h2 {
   font-weight: 700;
 }
 
+.comments {
+  margin-top: 72px;
+  padding-top: 34px;
+  border-top: 1px solid var(--color-border);
+}
+
+.comments__header {
+  margin-bottom: 24px;
+}
+
+.comments__header h2 {
+  font-size: 28px;
+}
+
+.comments__list {
+  display: grid;
+  gap: 20px;
+}
+
+.comment {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.comment p {
+  margin: 0;
+}
+
+.comment__meta {
+  margin-bottom: 8px !important;
+  color: var(--color-muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.comments__empty,
+.comments__sign-in {
+  color: var(--color-muted);
+}
+
+.comments__sign-in a {
+  color: var(--color-primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.comment-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 30px;
+  padding: 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.comment-form label {
+  font-weight: 700;
+}
+
+.comment-form textarea {
+  width: 100%;
+  resize: vertical;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.comment-form button {
+  width: fit-content;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 0;
+  background: var(--color-primary);
+  color: var(--color-bg);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.comment-form button:hover {
+  background: var(--color-accent);
+}
+
 .site-footer {
   background: var(--color-bg);
   border-top: 1px solid var(--color-border);

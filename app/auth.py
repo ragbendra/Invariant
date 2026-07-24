@@ -58,6 +58,21 @@ def get_current_user(
     return user
 
 
+def get_optional_user(
+    request: Request,
+    db: Session = Depends(get_db),
+) -> User | None:
+    token = request.cookies.get(AUTH_COOKIE_NAME)
+    if not token:
+        return None
+
+    try:
+        user_id = decode_access_token(token)
+    except HTTPException:
+        return None
+    return db.get(User, user_id)
+
+
 def get_or_create_csrf_token(request: Request) -> tuple[str, bool]:
     token = request.cookies.get(CSRF_COOKIE_NAME)
     if token:
