@@ -1,0 +1,10 @@
+.git
+.github
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+pytest-cache-files-*
+.env
+error
+templatedesign

@@ -28,6 +28,7 @@ pip-delete-this-directory.txt
 
 # Testing
 .pytest_cache/
+pytest-cache-files-*/
 .coverage
 .coverage.*
 htmlcov/

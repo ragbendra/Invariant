@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: blog_db
+          POSTGRES_USER: blog
+          POSTGRES_PASSWORD: blog_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U blog -d blog_db"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=5s
+          --health-timeout=3s
+          --health-retries=10
+    env:
+      DATABASE_URL: postgresql+psycopg2://blog:blog_password@localhost:5432/blog_db
+      REDIS_URL: redis://localhost:6379/0
+      SECRET_KEY: ci-only-secret
+      AUTH_COOKIE_SECURE: "false"
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Compile Python files
+        run: python -m compileall app alembic
+      - name: Apply database migrations
+        run: python -m alembic upgrade head
+      - name: Run tests
+        run: python -m pytest tests -q --cov=app --cov-report=term-missing
+      - name: Validate Compose configuration
+        run: docker compose config --quiet

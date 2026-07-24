@@ -41,10 +41,28 @@ tests/
 ## Run Locally
 
 ```powershell
-.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload
+.\run_dev.ps1
 ```
 
-Then open `http://127.0.0.1:8000`.
+Then open `http://127.0.0.1:8010`. Keep this development server running while editing; Uvicorn reloads Python, template, and static app changes on refresh.
+
+## Docker Compose
+
+Run the full PostgreSQL, Redis, and web stack with:
+
+```powershell
+docker compose up --build
+```
+
+The web container runs `alembic upgrade head` before starting Uvicorn. Open `http://127.0.0.1:8000` when the services report healthy.
+
+## Quality Checks
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests -q
+```
+
+GitHub Actions runs compilation, migrations, tests, and Compose validation on pushes and pull requests. Version tags such as `v1.0.0` publish a container image to GitHub Container Registry through the CD workflow.
 
 ## Frontend Approach
 

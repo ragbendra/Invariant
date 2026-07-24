@@ -245,7 +245,7 @@ Completed:
 16. Redis comment rate limiting
 17. Protected post editing with cache invalidation
 18. Protected post deletion
-
+19. Automated tests and container delivery
 The latest refinement pass added visible `:focus-visible` states for keyboard users, subtle post-card and pagination hover states, mobile navigation wrapping, tighter small-screen article typography, and a reduced-motion media query. These changes improve usability while preserving the restrained editorial design from the template references.
 
 The article body is converted from Markdown into sanitized HTML before it is passed to the post-detail template. The rendered result is now cached under `post:{slug}:html` through `app/cache.py`. Cache reads, writes, and invalidation are isolated behind helper functions, and Redis errors are logged and ignored so the public page continues rendering from the database when Redis is unavailable. The cache intentionally stores only the post body; comments will remain outside it when the comments phase is implemented.
@@ -260,7 +260,7 @@ Development now uses the fixed `run_dev.ps1` command on port `8010` with Uvicorn
 
 The account flow now includes `/register` with username, email, and bcrypt-hashed password storage. The sign-in page links to registration, and successful registration redirects back to `/login?registered=1` with a confirmation message. Passwords shorter than eight characters and duplicate usernames or email addresses are rejected.
 
-The protected create-post unit requires a valid JWT, checks a separate double-submit CSRF token, validates slug uniqueness and the optional publish date, and assigns the new post to the authenticated user. Edit and delete routes are intentionally not included yet.
+The protected create-post unit requires a valid JWT, checks a separate double-submit CSRF token, validates slug uniqueness and the optional publish date, and assigns the new post to the authenticated user. Post editing and deletion apply the same ownership and CSRF rules.
 
 Comments now render outside the cached post body. Published post pages load approved comments directly from the database, while signed-in users can submit a comment through `POST /posts/{slug}/comments`. New comments store the authenticated user's ID and username, default to unapproved for moderation, and use CSRF validation. Anonymous readers can still read posts but are prompted to sign in before commenting.
 
@@ -270,10 +270,12 @@ Post owners can now edit their own posts at `/account/posts/{slug}/edit`. The br
 
 Post owners can delete their own posts from the edit page. The browser form uses `/account/posts/{slug}/delete`, while `DELETE /posts/{slug}` is available for clients following the specification. The route validates ownership and CSRF, commits the deletion, and invalidates the post cache afterward.
 
+The project now includes an isolated test harness covering public routes, registration/login, JWT protection, CSRF rejection, user ownership, post lifecycle operations, Markdown rendering, cache invalidation, authenticated comments, and the Redis rate-limit boundary. Docker Compose provides PostgreSQL, Redis, and the web service with health checks; the web entrypoint applies Alembic migrations before startup. CI runs compilation, migrations, tests, and Compose validation. CD publishes tagged releases to GitHub Container Registry.
+
 Current next implementation step:
 
-1. Validate Redis hit, miss, and invalidation behavior with Redis or a fake Redis client.
-4. Keep comments outside the rendered post-body cache when that phase begins.
+1. Run the full Compose stack and validate Redis hit, miss, and invalidation against live services.
+2. Keep comments outside the rendered post-body cache.
 
 ## Validation Used
 
@@ -285,4 +287,4 @@ The following checks were run after the latest frontend edits:
 .\.venv\Scripts\python.exe -m compileall app
 ```
 
-Both passed. The auth, user post, comment, edit, and delete templates load; JWT creation/decoding still round-trips correctly; the comment model exposes `user_id`; migration `b1c8e2a4f6d1` is applied at database head; the rate-limit threshold passes with a fake Redis client; and deletion cache invalidation is covered by the cache helper check. The next implementation step is broader Redis cache validation.
+Both passed. The auth, user post, comment, edit, and delete templates load; JWT creation/decoding still round-trips correctly; the comment model exposes `user_id`; migration `b1c8e2a4f6d1` is applied at database head; the rate-limit threshold passes with a fake Redis client; deletion cache invalidation is covered by the cache helper check; and the application suite passes 8 tests. A live Compose run remains the final environment-level validation.
