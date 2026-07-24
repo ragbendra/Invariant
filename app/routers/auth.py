@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Form, Request, HTTPException, status
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from starlette.templating import Jinja2Templates
 
@@ -21,12 +22,62 @@ def verify_password(password: str, hashed_password: str) -> bool:
         return False
 
 
+def hash_password(password: str) -> str:
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+
 @router.get("/login")
 def login_page(request: Request):
     return templates.TemplateResponse(
         request=request,
         name="login.html",
+        context={"registered": request.query_params.get("registered")},
     )
+
+
+@router.get("/register")
+def register_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="register.html",
+    )
+
+
+@router.post("/register")
+def register(
+    username: str = Form(...),
+    email: str = Form(...),
+    password: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    if len(password) < 8:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Password must be at least 8 characters",
+        )
+
+    if db.query(User).filter((User.username == username) | (User.email == email)).first():
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Username or email is already registered",
+        )
+
+    user = User(
+        username=username,
+        email=email,
+        hashed_password=hash_password(password),
+    )
+    db.add(user)
+    try:
+        db.commit()
+    except IntegrityError as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Username or email is already registered",
+        ) from exc
+
+    return RedirectResponse("/login?registered=1", status_code=status.HTTP_303_SEE_OTHER)
 
 
 @router.post("/login")

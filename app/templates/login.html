@@ -8,6 +8,9 @@
         <p class="eyebrow">Invariant account</p>
         <h1 id="login-title">Sign in to participate.</h1>
         <p>Sign in to create posts, join conversations, and access account features as they become available.</p>
+        {% if registered %}
+            <p class="auth-page__notice">Account created. You can sign in now.</p>
+        {% endif %}
     </div>
 
     <form class="auth-form" method="post" action="/login">
@@ -18,6 +21,7 @@
         <input id="password" name="password" type="password" autocomplete="current-password" required>
 
         <button type="submit">Sign in</button>
+        <p class="auth-page__links">New to Invariant? <a href="/register">Create an account</a></p>
     </form>
 </section>
 {% endblock %}

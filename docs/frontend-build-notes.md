@@ -240,6 +240,7 @@ Completed:
 11. Redis cache wrapper for rendered post bodies
 12. JWT user login foundation
 13. Protected create-post form with CSRF validation
+14. User registration flow
 
 The latest refinement pass added visible `:focus-visible` states for keyboard users, subtle post-card and pagination hover states, mobile navigation wrapping, tighter small-screen article typography, and a reduced-motion media query. These changes improve usability while preserving the restrained editorial design from the template references.
 
@@ -251,11 +252,13 @@ The header and footer now expose a `Sign in` entry point without changing the pu
 
 The shared header places `Sign in` as the rightmost navigation item. It uses the copper accent and a subtle divider so account access is discoverable without competing with the public reading links. On narrow screens, the divider is removed and the item wraps with the rest of the navigation. The component is named `site-nav__account` to reflect that it is for normal users, not a special admin-only entry point.
 
+The account flow now includes `/register` with username, email, and bcrypt-hashed password storage. The sign-in page links to registration, and successful registration redirects back to `/login?registered=1` with a confirmation message. Passwords shorter than eight characters and duplicate usernames or email addresses are rejected.
+
 The next admin unit adds a protected create-post form at `/admin/posts/new` and a `POST /admin/posts` route. The route requires a valid JWT, checks a separate double-submit CSRF token, validates slug uniqueness and the optional publish date, and assigns the new post to the authenticated user. Edit and delete routes are intentionally not included yet.
 
 Current next implementation step:
 
-1. Add user registration and move the create-post workflow under the authenticated user model.
+1. Move the create-post workflow under the authenticated user model.
 2. Call `invalidate_post(slug)` after a post is edited.
 3. Validate Redis hit, miss, and invalidation behavior with Redis or a fake Redis client.
 4. Keep comments outside the rendered post-body cache when that phase begins.
@@ -270,4 +273,4 @@ The following checks were run after the latest frontend edits:
 .\.venv\Scripts\python.exe -m compileall app
 ```
 
-Both passed. The auth templates load and JWT creation/decoding still round-trips correctly. The next live validation should target `/login` and the user registration flow; the earlier `/admin/login` wording is no longer the intended product model.
+Both passed. The auth templates load, JWT creation/decoding still round-trips correctly, and the registration flow validates password length before database insertion. The next implementation step is moving post creation under authenticated users.
