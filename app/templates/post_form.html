@@ -1,36 +1,36 @@
 {% extends "base.html" %}
 
-{% block title %}New Post - Invariant{% endblock %}
+{% block title %}{% if post %}Edit Post{% else %}New Post{% endif %} - Invariant{% endblock %}
 
 {% block content %}
 <section class="account-page" aria-labelledby="new-post-title">
     <div class="account-page__header">
         <p class="eyebrow">Your Invariant account</p>
-        <h1 id="new-post-title">Create a new post.</h1>
-        {% if created %}
-            <p class="account-page__notice">Post created successfully.</p>
+        <h1 id="new-post-title">{% if post %}Edit your post.{% else %}Create a new post.{% endif %}</h1>
+        {% if created or updated %}
+            <p class="account-page__notice">{% if updated %}Post updated successfully.{% else %}Post created successfully.{% endif %}</p>
         {% endif %}
     </div>
 
-    <form class="auth-form account-form" method="post" action="/posts">
+    <form class="auth-form account-form" method="post" action="{% if post %}/account/posts/{{ post.slug }}/edit{% else %}/posts{% endif %}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
         <label for="title">Title</label>
-        <input id="title" name="title" type="text" required>
+        <input id="title" name="title" type="text" value="{{ post.title if post else '' }}" required>
 
         <label for="slug">Slug</label>
-        <input id="slug" name="slug" type="text" required>
+        <input id="slug" name="slug" type="text" value="{{ post.slug if post else '' }}" required>
 
         <label for="excerpt">Excerpt</label>
-        <textarea id="excerpt" name="excerpt" rows="3" required></textarea>
+        <textarea id="excerpt" name="excerpt" rows="3" required>{{ post.excerpt if post else '' }}</textarea>
 
         <label for="markdown_content">Content (Markdown)</label>
-        <textarea id="markdown_content" name="markdown_content" rows="16" required></textarea>
+        <textarea id="markdown_content" name="markdown_content" rows="16" required>{{ post.markdown_content if post else '' }}</textarea>
 
         <label for="published_at">Publish date (optional)</label>
-        <input id="published_at" name="published_at" type="datetime-local">
+        <input id="published_at" name="published_at" type="datetime-local" value="{{ post.published_at.strftime('%Y-%m-%dT%H:%M') if post and post.published_at else '' }}">
 
-        <button type="submit">Create post</button>
+        <button type="submit">{% if post %}Save changes{% else %}Create post{% endif %}</button>
     </form>
 </section>
 {% endblock %}
