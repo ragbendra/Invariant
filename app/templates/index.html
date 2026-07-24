@@ -49,4 +49,94 @@
         <div class="layout-panel__slot layout-panel__slot--tall"></div>
     </aside>
 </section>
+
+<section class="template-preview" aria-labelledby="personal-preview-title">
+    <div class="template-preview__intro">
+        <p class="eyebrow">Personal layout study</p>
+        <h2 id="personal-preview-title">A stronger author voice.</h2>
+        <p>{{ personal_preview.intro }}</p>
+        <p class="template-preview__author">{{ personal_preview.author }} · simulated profile</p>
+    </div>
+
+    <div class="personal-preview__feature">
+        <div class="preview-media preview-media--portrait"><span>{{ personal_preview.featured.media }}</span></div>
+        <h3>{{ personal_preview.featured.title }}</h3>
+        <p class="preview-meta">{{ personal_preview.featured.date }}</p>
+    </div>
+
+    <div class="personal-preview__side">
+        {% for item in personal_preview.side %}
+            <article class="preview-story">
+                <div class="preview-media preview-media--small"><span>{{ item.media }}</span></div>
+                <div>
+                    <h3>{{ item.title }}</h3>
+                    <p class="preview-meta">{{ item.date }}</p>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+
+    <div class="template-preview__latest">
+        <h3>Latest posts</h3>
+        <div class="preview-grid preview-grid--two">
+            {% for item in personal_preview.latest %}
+                <article class="preview-story preview-story--stacked">
+                    <div class="preview-media"><span>{{ item.media }}</span></div>
+                    <h3>{{ item.title }}</h3>
+                    <p class="preview-meta">{{ item.date }}</p>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="template-preview template-preview--travel" aria-labelledby="travel-preview-title">
+    <div class="travel-preview__hero">
+        <div class="preview-media preview-media--banner"><span>{{ travel_preview.hero.media }}</span></div>
+        <div class="travel-preview__hero-copy">
+            <p class="preview-meta">{{ travel_preview.hero.date }} · {{ travel_preview.hero.author }}</p>
+            <h2 id="travel-preview-title">{{ travel_preview.hero.title }}</h2>
+        </div>
+    </div>
+
+    <div class="template-preview__intro template-preview__intro--centered">
+        <p class="eyebrow">Travel layout study</p>
+        <h2>Popular posts</h2>
+        <p>Simulated editorial data for the travel-inspired arrangement.</p>
+    </div>
+
+    <div class="travel-preview__popular">
+        <article class="preview-story preview-story--popular">
+            <div class="preview-media preview-media--popular"><span>{{ travel_preview.popular.media }}</span></div>
+            <h3>{{ travel_preview.popular.title }}</h3>
+            <p class="preview-meta">{{ travel_preview.popular.author }} · {{ travel_preview.popular.date }}</p>
+        </article>
+        <div class="travel-preview__popular-side">
+            {% for item in travel_preview.popular_side %}
+                <article class="preview-story">
+                    <div class="preview-media preview-media--small"><span>{{ item.media }}</span></div>
+                    <div>
+                        <h3>{{ item.title }}</h3>
+                        <p class="preview-meta">{{ item.author }} · {{ item.date }}</p>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="template-preview__intro template-preview__intro--centered">
+        <p class="eyebrow">Discovery layer</p>
+        <h2>Trending posts</h2>
+    </div>
+
+    <div class="preview-grid preview-grid--three">
+        {% for item in travel_preview.trending %}
+            <article class="preview-story preview-story--stacked">
+                <div class="preview-media"><span>{{ item.media }}</span></div>
+                <h3>{{ item.title }}</h3>
+                <p class="preview-meta">{{ item.author }}</p>
+            </article>
+        {% endfor %}
+    </div>
+</section>
 {% endblock %}

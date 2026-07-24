@@ -6,13 +6,17 @@ This document records the frontend work completed so far and the reasoning behin
 
 The main implementation guide is `blog_build_plan.md`.
 
-The files in `templatedesign/` are used as visual references. The current frontend mainly borrows from:
+The files in `templatedesign/` are used as visual references. The current frontend borrows from all five references:
 
 - `Classic Blog Grid.png`
 - `Classic Blog Post Detail.png`
 - `Classic With Side Blog.png`
+- `Personal Blog Grid.png`
+- `Travel Blog Grid.png`
 
 The design references include more UI than the current backend supports, so unsupported sections are represented as layout scaffolding or disabled placeholders instead of fake working features.
+
+The Personal and Travel references are now represented as clearly labeled homepage layout studies below the live post list. Their titles, author names, dates, and media labels come from `app/demo_content.py` and are simulated values for visual composition only; they are not persisted posts and do not create fake routes.
 
 ## What We Changed
 
@@ -246,6 +250,10 @@ Completed:
 17. Protected post editing with cache invalidation
 18. Protected post deletion
 19. Automated tests and container delivery
+20. Personal and Travel layout studies with simulated preview data
+
+The homepage now incorporates visual studies from all five template references. The Personal study uses an author-led hero, featured story, side stories, and latest-post grid. The Travel study uses a banner feature, popular-post split, and three-column trending grid. Values in these studies come from `app/demo_content.py`, are visibly labeled as simulated, and are not treated as database posts or routed content.
+
 The latest refinement pass added visible `:focus-visible` states for keyboard users, subtle post-card and pagination hover states, mobile navigation wrapping, tighter small-screen article typography, and a reduced-motion media query. These changes improve usability while preserving the restrained editorial design from the template references.
 
 The article body is converted from Markdown into sanitized HTML before it is passed to the post-detail template. The rendered result is now cached under `post:{slug}:html` through `app/cache.py`. Cache reads, writes, and invalidation are isolated behind helper functions, and Redis errors are logged and ignored so the public page continues rendering from the database when Redis is unavailable. The cache intentionally stores only the post body; comments will remain outside it when the comments phase is implemented.

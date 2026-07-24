@@ -14,6 +14,7 @@ from app.auth import (
 from app.cache import get_cached_post, set_cached_post
 from app.config import CSRF_COOKIE_NAME
 from app.database import get_db
+from app.demo_content import PERSONAL_PREVIEW, TRAVEL_PREVIEW
 from app.markdown import render_markdown
 from app.models.comment import Comment
 from app.models.post import Post
@@ -52,6 +53,8 @@ def post_list(
             "posts": posts,
             "page": page,
             "total_pages": total_pages,
+            "personal_preview": PERSONAL_PREVIEW,
+            "travel_preview": TRAVEL_PREVIEW,
         },
     )
 
